@@ -1,0 +1,28 @@
+{
+  "name": "warcraft-rankings-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord Bot that ties into Warcraft Logs API",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js --exec babel-node --presets es2015",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dellinger/warcraft-rankings-discord-bot.git"
+  },
+  "author": "David Ellinger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dellinger/warcraft-rankings-discord-bot/issues"
+  },
+  "homepage": "https://github.com/dellinger/warcraft-rankings-discord-bot#readme",
+  "dependencies": {
+    "discord.js": "^8.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.2",
+    "nodemon": "^1.10.0"
+  }
+}
