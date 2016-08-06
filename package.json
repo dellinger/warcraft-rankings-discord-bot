@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/dellinger/warcraft-rankings-discord-bot#readme",
   "dependencies": {
-    "discord.js": "^8.1.0"
+    "discord.js": "^8.1.0",
+    "dotenv": "^2.0.0",
+    "request": "^2.74.0"
   },
   "devDependencies": {
     "nodemon": "^1.10.0"

@@ -1,6 +1,7 @@
 "use strict";
 var Discord = require("discord.js");
 var BasicActions_1 = require("./BasicActions");
+var WCLActions_1 = require("./WCLActions");
 var botToken = "MjExMjM1MzE4MTM5OTc3NzMx.Coae-A.H45w2qx9Rm82J3J80J6VOyrEPRI";
 var DiscordBot = (function () {
     function DiscordBot() {
@@ -18,11 +19,14 @@ var DiscordBot = (function () {
             return _this.supportedActions.hasOwnProperty(message);
         };
         this.bot = new Discord.Client();
-        var basicActions = new BasicActions_1["default"](this.bot);
+        var basicActions = new BasicActions_1["default"]();
         this.initialize();
         this.supportedActions['!ping'] = basicActions.pong;
         this.supportedActions["!help"] = this.listCommands;
+        var wclActions = new WCLActions_1["default"]();
+        this.supportedActions["!parse"] = wclActions.retrieveParse;
     }
+    //TODO: Make this a promise?
     DiscordBot.prototype.initialize = function () {
         var that = this;
         console.log("Logging in...");

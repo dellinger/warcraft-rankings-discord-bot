@@ -1,6 +1,7 @@
 "use strict";
 var Discord = require("discord.js");
 import BasicActions from "./BasicActions";
+import WCLActions from "./WCLActions";
 var botToken = "MjExMjM1MzE4MTM5OTc3NzMx.Coae-A.H45w2qx9Rm82J3J80J6VOyrEPRI";
 
 export class DiscordBot {
@@ -9,12 +10,16 @@ export class DiscordBot {
     public supportedActions = {};
     constructor() {
         this.bot = new Discord.Client();
-        var basicActions = new BasicActions(this.bot);
+        var basicActions = new BasicActions();
         this.initialize();
         this.supportedActions['!ping'] = basicActions.pong;
         this.supportedActions["!help"] = this.listCommands;
+        var wclActions = new WCLActions();
+        this.supportedActions["!parse"] = wclActions.retrieveParse;
+
     }
 
+    //TODO: Make this a promise?
     initialize() {
         let that = this;
         console.log("Logging in...");
