@@ -1,19 +1,25 @@
-
-export default class BasicActions {
-
-    constructor(bot) {
-        this.bot = bot;
+"use strict";
+var BasicActions = (function () {
+    function BasicActions() {
     }
-
-    pong = (message) => {
-        this.bot.reply(message, "pong");
+    BasicActions.prototype.pong = function (bot, message) {
+        if (bot) {
+            bot.reply(message, "pong");
+        }
+        else {
+            console.log("Error");
+        }
     };
-
-    listChannels = (message) => {
-        let channels = this.bot.channels.map((channel) => {
+    ;
+    BasicActions.prototype.listChannels = function (bot, message) {
+        var channels = bot.channels.map(function (channel) {
             return channel.name;
-    });
-    this.bot.sendMessage(channels);
-};
-
-}
+        });
+        bot.sendMessage(channels);
+    };
+    ;
+    return BasicActions;
+}());
+exports.__esModule = true;
+exports["default"] = BasicActions;
+//# sourceMappingURL=BasicActions.js.map

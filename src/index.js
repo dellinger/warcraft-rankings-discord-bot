@@ -1,6 +1,5 @@
 "use strict";
-require('babel-register');
-import {DiscordBot} from "./Bot";
-
-var bot = new DiscordBot();
-//bot.initialize();
+var Bot_1 = require("./Bot");
+var bot = new Bot_1.DiscordBot();
+//bot.initialize(); 
+//# sourceMappingURL=index.js.map
