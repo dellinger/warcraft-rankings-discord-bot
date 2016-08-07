@@ -16,7 +16,8 @@ export class DiscordBot {
         this.supportedActions["!help"] = this.listCommands;
         var wclActions = new WCLActions();
         this.supportedActions["!parse"] = wclActions.retrieveParse;
-
+        this.supportedActions["!classes"] = wclActions.getClasses;
+        this.supportedActions["!zones"] = wclActions.getZones;
     }
 
     //TODO: Make this a promise?
@@ -34,13 +35,13 @@ export class DiscordBot {
             console.log(`Message: ${message.cleanContent}`);
             let messageArray = message.cleanContent.split(" ");
             let potentialAction = messageArray[0];
-            let temp = messageArray.splice(1, messageArray.length);
-            console.log(`Temp: ${temp}`);
+            let splicedMessageArray = messageArray.splice(1, messageArray.length);
+            console.log(`splicedMessageArray: ${splicedMessageArray}`);
             console.log(`Potential Action: ${potentialAction}`);
             if(that.isSupportedAction(potentialAction)) {
                 console.log(`'${potentialAction}' is supported!`);
                 let action = that.supportedActions[potentialAction];
-                action(that.bot,message,...temp);
+                action(that.bot,message,...splicedMessageArray);
             }
         });
     }
@@ -55,7 +56,9 @@ export class DiscordBot {
     };
 
     isSupportedAction = (message) => {
-        return this.supportedActions.hasOwnProperty(message);
+        let isSupported = this.supportedActions.hasOwnProperty(message);
+        console.log(`isSupported: ${isSupported}`);
+        return isSupported;
     };
 
 

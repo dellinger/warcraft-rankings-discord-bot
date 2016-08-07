@@ -1,56 +1,57 @@
 "use strict";
 var Discord = require("discord.js");
-var BasicActions_1 = require("./BasicActions");
-var WCLActions_1 = require("./WCLActions");
+const BasicActions_1 = require("./BasicActions");
+const WCLActions_1 = require("./WCLActions");
 var botToken = "MjExMjM1MzE4MTM5OTc3NzMx.Coae-A.H45w2qx9Rm82J3J80J6VOyrEPRI";
-var DiscordBot = (function () {
-    function DiscordBot() {
-        var _this = this;
+class DiscordBot {
+    constructor() {
         this.supportedActions = {};
-        this.listCommands = function (bot, message) {
-            var that = _this;
-            var actions = "";
-            Object.getOwnPropertyNames(that.supportedActions).forEach(function (val, idx, array) {
-                actions += "```" + val + "```\n";
+        this.listCommands = (bot, message) => {
+            let that = this;
+            let actions = "";
+            Object.getOwnPropertyNames(that.supportedActions).forEach((val, idx, array) => {
+                actions += `\`\`\`${val}\`\`\`\n`;
             });
-            bot.sendMessage(message.channel, "This bot recognizes the following commands:\n " + actions);
+            bot.sendMessage(message.channel, `This bot recognizes the following commands:\n ${actions}`);
         };
-        this.isSupportedAction = function (message) {
-            return _this.supportedActions.hasOwnProperty(message);
+        this.isSupportedAction = (message) => {
+            let isSupported = this.supportedActions.hasOwnProperty(message);
+            console.log(`isSupported: ${isSupported}`);
+            return isSupported;
         };
         this.bot = new Discord.Client();
-        var basicActions = new BasicActions_1["default"]();
+        var basicActions = new BasicActions_1.default();
         this.initialize();
         this.supportedActions['!ping'] = basicActions.pong;
         this.supportedActions["!help"] = this.listCommands;
-        var wclActions = new WCLActions_1["default"]();
+        var wclActions = new WCLActions_1.default();
         this.supportedActions["!parse"] = wclActions.retrieveParse;
+        this.supportedActions["!classes"] = wclActions.getClasses;
+        this.supportedActions["!zones"] = wclActions.getZones;
     }
     //TODO: Make this a promise?
-    DiscordBot.prototype.initialize = function () {
-        var that = this;
+    initialize() {
+        let that = this;
         console.log("Logging in...");
-        this.bot.loginWithToken(botToken, function (error, token) {
+        this.bot.loginWithToken(botToken, (error, token) => {
             if (error) {
                 console.error("Error occured");
             }
-            console.log("Token: " + token);
+            console.log(`Token: ${token}`);
         });
-        this.bot.on("message", function (message) {
-            console.log("Message: " + message.cleanContent);
-            var messageArray = message.cleanContent.split(" ");
-            var potentialAction = messageArray[0];
-            var temp = messageArray.splice(1, messageArray.length);
-            console.log("Temp: " + temp);
-            console.log("Potential Action: " + potentialAction);
+        this.bot.on("message", message => {
+            console.log(`Message: ${message.cleanContent}`);
+            let messageArray = message.cleanContent.split(" ");
+            let potentialAction = messageArray[0];
+            let splicedMessageArray = messageArray.splice(1, messageArray.length);
+            console.log(`splicedMessageArray: ${splicedMessageArray}`);
+            console.log(`Potential Action: ${potentialAction}`);
             if (that.isSupportedAction(potentialAction)) {
-                console.log("'" + potentialAction + "' is supported!");
-                var action = that.supportedActions[potentialAction];
-                action.apply(void 0, [that.bot, message].concat(temp));
+                console.log(`'${potentialAction}' is supported!`);
+                let action = that.supportedActions[potentialAction];
+                action(that.bot, message, ...splicedMessageArray);
             }
         });
-    };
-    return DiscordBot;
-}());
+    }
+}
 exports.DiscordBot = DiscordBot;
-//# sourceMappingURL=Bot.js.map
