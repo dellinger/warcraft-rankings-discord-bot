@@ -1,2 +1,3 @@
 WCL_PUBLIC_KEY=fake_public_key
 WCL_PRIVATE_KEY=fake_private_key
+BOT_TOKEN=fake_bot_token

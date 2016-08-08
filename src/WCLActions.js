@@ -45,7 +45,7 @@ class WCLActions {
         request({ method: 'GET', uri: uri, json: true }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 let zones = response.body;
-                console.log(`zones: ${prettyjson.render(zones)}`);
+                console.log(`d: ${prettyjson.render(zones)}`);
                 bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones)}\`\`\`\n`);
             }
             else {

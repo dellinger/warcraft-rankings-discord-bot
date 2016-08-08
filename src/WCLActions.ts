@@ -76,7 +76,7 @@ export default class WCLActions {
             if(!error && response.statusCode == 200) {
 
                 let zones : Zone[] = response.body;
-                console.log(`zones: ${prettyjson.render(zones)}`);
+                console.log(`d: ${prettyjson.render(zones)}`);
                 bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones)}\`\`\`\n`);
             } else {
                 bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);

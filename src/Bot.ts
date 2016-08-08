@@ -1,20 +1,21 @@
 "use strict";
-var Discord = require("discord.js");
+import * as Discord from "discord.js";
 import BasicActions from "./BasicActions";
 import WCLActions from "./WCLActions";
 var botToken = "MjExMjM1MzE4MTM5OTc3NzMx.Coae-A.H45w2qx9Rm82J3J80J6VOyrEPRI";
 
 export class DiscordBot {
 
-    public bot;
+    public bot : Discord.Client;
     public supportedActions = {};
     constructor() {
         this.bot = new Discord.Client();
         var basicActions = new BasicActions();
+        var wclActions = new WCLActions();
         this.initialize();
         this.supportedActions['!ping'] = basicActions.pong;
         this.supportedActions["!help"] = this.listCommands;
-        var wclActions = new WCLActions();
+        
         this.supportedActions["!parse"] = wclActions.retrieveParse;
         this.supportedActions["!classes"] = wclActions.getClasses;
         this.supportedActions["!zones"] = wclActions.getZones;
@@ -24,7 +25,8 @@ export class DiscordBot {
     initialize() {
         let that = this;
         console.log("Logging in...");
-        this.bot.loginWithToken(botToken, (error, token) => {
+    
+        this.bot.loginWithToken(botToken,null,null, (error : Error, token : string) => {
             if(error){
                 console.error("Error occured");
             }
