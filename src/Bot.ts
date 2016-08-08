@@ -2,7 +2,6 @@
 import * as Discord from "discord.js";
 import BasicActions from "./BasicActions";
 import WCLActions from "./WCLActions";
-var botToken = "MjExMjM1MzE4MTM5OTc3NzMx.Coae-A.H45w2qx9Rm82J3J80J6VOyrEPRI";
 
 export class DiscordBot {
 
@@ -26,7 +25,7 @@ export class DiscordBot {
         let that = this;
         console.log("Logging in...");
     
-        this.bot.loginWithToken(botToken,null,null, (error : Error, token : string) => {
+        this.bot.loginWithToken(process.env.BOT_TOKEN,null,null, (error : Error, token : string) => {
             if(error){
                 console.error("Error occured");
             }
