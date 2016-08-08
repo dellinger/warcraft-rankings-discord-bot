@@ -2,6 +2,14 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "moduleResolution": "node",
      "sourceMap": true
-  }
+  },
+  "filesGlob": [
+        "src/**/*.ts",
+        "typings/tsd.d.ts"
+    ],
+  "exclude": [
+        "node_modules",
+        "typings"]
 }

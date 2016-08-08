@@ -1,3 +1,4 @@
+///<reference path="../typings/tsd.d.ts" />
 "use strict";
 import * as Discord from "discord.js";
 import BasicActions from "./BasicActions";
