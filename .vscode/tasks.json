@@ -7,13 +7,19 @@
     "args": [
         "--no-color"
     ],
-    "tasks": [{
+    "tasks": [
+        {
 			"taskName": "default",
 			"isBuildCommand": false,
 			"showOutput": "always"
 		},
         {
 			"taskName": "develop",
+			"isBuildCommand": false,
+			"showOutput": "always"
+		},
+        {
+			"taskName": "start",
 			"isBuildCommand": true,
 			"showOutput": "always"
 		}]

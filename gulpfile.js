@@ -4,23 +4,18 @@ var tsProject = ts.createProject("tsconfig.json");
 var nodemon = require("gulp-nodemon");
 var sourcemaps = require("gulp-sourcemaps");
 var del = require("del");
+var exec = require('child_process').exec;
 
 gulp.task('default', ['build']);
 gulp.task('build', ['compile']);
-
-
-gulp.task("typescript", function() {
-    return tsProject.src()
-        .pipe(ts(tsProject))
-        .js.pipe(gulp.dest("dist"));
-});
+gulp.task('start', ['nodestart']);
 
 gulp.task('clean', function () {
   return del('dist/**/*');
 });
 
-// TypeScript compile
-gulp.task('compile', ['clean'], function () {
+// TypeScript compile / transpile
+gulp.task('compile', ['clean'], function (cb) {
   return tsProject.src()
         .pipe(sourcemaps.init())
         .pipe(ts(tsProject)).js
@@ -28,14 +23,22 @@ gulp.task('compile', ['clean'], function () {
         .pipe(gulp.dest("dist"));
 });
 
+gulp.task('nodestart',["build"], function (cb) {
+  exec('node dist/index.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+})
 
-gulp.task('develop',['default'], function () {
+
+gulp.task('develop',['compile'], function () {
   nodemon({
     script: 'dist/index.js',
     ext: 'ts',
     env: { 'NODE_ENV': 'development',
-    tasks: ['default']}
-  }).on('restart', function () {
+    tasks: ['compile']}
+  }).on('restart',['compile'], function () {
       console.log('restarted!')
     })
 })

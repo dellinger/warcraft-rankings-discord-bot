@@ -70,17 +70,37 @@ export default class WCLActions {
     }
 
     public getZones(bot: any, message: any) {
-        let uri = `http://www.warcraftlogs.com/v1/zones?api_key=${process.env.WCL_PUBLIC_KEY}`;
-        console.log(uri);
-        request({ method : 'GET', uri: uri, json: true}, (error, response, body) => {
-            if(!error && response.statusCode == 200) {
-                let zones : Zone[] = response.body;
-                console.log(`zones: ${prettyjson.render(zones)}`);
-                bot.reply(message, `\`\`\`${prettyjson.render(zones)}\`\`\`\n`);
-            } else {
-                bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
+        console.log(message);
+        var messageArray : string[] = message.content.split(' ');
+        if(messageArray.length !== 2) {
+            bot.reply(message, "Need to enter ```!zones *zone_name*```");
+        } else {
+
+            let uri = `http://www.warcraftlogs.com/v1/zones?api_key=${process.env.WCL_PUBLIC_KEY}`;
+            console.log(uri);
+            request({ method : 'GET', uri: uri, json: true}, (error, response, body) => {
+                let isFound = false;
+                if(!error && response.statusCode == 200) {
+                    let zones : Zone[] = response.body;
+                    let zoneToSearchFor = messageArray[1].toLocaleUpperCase();
+                   zones.every( (value,index,array) => {
+                       if(value.name.toLocaleUpperCase() === zoneToSearchFor || value.name.indexOf(zoneToSearchFor) > -1) {
+                            console.log(`zones: ${prettyjson.render(zones[index])}`);
+                            bot.reply(message, `\`\`\`${prettyjson.render(zones[index])}\`\`\`\n`);
+                            isFound = true;
+                            return false;
+                       }
+                       return true;
+                   });
+                   if(!isFound){
+                       bot.sendMessage(message.channel, `Could not find zone with name '${zoneToSearchFor}'`);
+                   } 
+                } else {
+                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
+                }
+
             }
-        });
+        }
     }
 
     public getCharacterRankings(bot: any, message: any, characterName : string, serverName : string, serverRegion: string) {
