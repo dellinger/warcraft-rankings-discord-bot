@@ -24,7 +24,10 @@
     "request": "^2.74.0"
   },
   "devDependencies": {
+    "del": "^2.2.1",
     "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.1.0",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.13.6",
     "nodemon": "^1.10.0"
   }

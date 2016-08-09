@@ -9,6 +9,7 @@ export class DiscordBot {
     public bot : Discord.Client;
     public supportedActions = {};
     constructor() {
+        //TODO: DI these later?
         this.bot = new Discord.Client();
         var basicActions = new BasicActions();
         var wclActions = new WCLActions();
@@ -19,6 +20,7 @@ export class DiscordBot {
         this.supportedActions["!parse"] = wclActions.retrieveParse;
         this.supportedActions["!classes"] = wclActions.getClasses;
         this.supportedActions["!zones"] = wclActions.getZones;
+        this.supportedActions["!rank"] = wclActions.getCharacterRankings;
     }
 
     //TODO: Make this a promise?

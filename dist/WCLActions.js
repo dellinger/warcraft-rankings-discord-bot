@@ -45,8 +45,22 @@ class WCLActions {
         request({ method: 'GET', uri: uri, json: true }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 let zones = response.body;
-                console.log(`d: ${prettyjson.render(zones)}`);
-                bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones)}\`\`\`\n`);
+                console.log(`zones: ${prettyjson.render(zones)}`);
+                bot.reply(message, `\`\`\`${prettyjson.render(zones)}\`\`\`\n`);
+            }
+            else {
+                bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
+            }
+        });
+    }
+    getCharacterRankings(bot, message, characterName, serverName, serverRegion) {
+        let uri = `http://www.warcraftlogs.com/v1/rankings/character${characterName}/${serverName}/${serverRegion}?api_key=${process.env.WCL_PUBLIC_KEY}`;
+        console.log(uri);
+        request({ method: 'GET', uri: uri, json: true }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                let ranks = response.body;
+                console.log(`ranks: ${prettyjson.render(ranks)}`);
+                bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(ranks)}\`\`\`\n`);
             }
             else {
                 bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
@@ -56,3 +70,5 @@ class WCLActions {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = WCLActions;
+
+//# sourceMappingURL=WCLActions.js.map

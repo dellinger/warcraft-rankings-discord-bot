@@ -9,6 +9,11 @@
     ],
     "tasks": [{
 			"taskName": "default",
+			"isBuildCommand": false,
+			"showOutput": "always"
+		},
+        {
+			"taskName": "develop",
 			"isBuildCommand": true,
 			"showOutput": "always"
 		}]

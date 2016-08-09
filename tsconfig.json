@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-     "sourceMap": true
+    "noImplicitAny": true,
+    "sourceMaps": true
   },
   "filesGlob": [
         "src/**/*.ts",

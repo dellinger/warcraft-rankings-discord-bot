@@ -19,8 +19,8 @@ class DiscordBot {
             console.log(`isSupported: ${isSupported}`);
             return isSupported;
         };
+        //TODO: DI these later?
         this.bot = new Discord.Client();
-        ;
         var basicActions = new BasicActions_1.default();
         var wclActions = new WCLActions_1.default();
         this.initialize();
@@ -29,6 +29,7 @@ class DiscordBot {
         this.supportedActions["!parse"] = wclActions.retrieveParse;
         this.supportedActions["!classes"] = wclActions.getClasses;
         this.supportedActions["!zones"] = wclActions.getZones;
+        this.supportedActions["!rank"] = wclActions.getCharacterRankings;
     }
     //TODO: Make this a promise?
     initialize() {
@@ -56,3 +57,5 @@ class DiscordBot {
     }
 }
 exports.DiscordBot = DiscordBot;
+
+//# sourceMappingURL=Bot.js.map
