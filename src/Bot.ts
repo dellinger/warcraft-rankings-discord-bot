@@ -21,6 +21,7 @@ export class DiscordBot {
         this.supportedActions["!classes"] = wclActions.getClasses;
         this.supportedActions["!zones"] = wclActions.getZones;
         this.supportedActions["!rank"] = wclActions.getCharacterRankings;
+        this.supportedActions["!encounter"] = wclActions.getEncounter;
     }
 
     //TODO: Make this a promise?
