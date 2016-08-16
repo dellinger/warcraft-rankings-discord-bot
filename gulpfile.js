@@ -10,8 +10,16 @@ gulp.task('default', ['build']);
 gulp.task('build', ['compile']);
 gulp.task('start', ['nodestart']);
 
-gulp.task('clean', function () {
+gulp.task('clean', ['clean_js_files','clean_map_files'], function () {
   return del('dist/**/*');
+});
+
+gulp.task('clean_js_files', function() {
+  return del('src/**/*.js')
+});
+
+gulp.task('clean_map_files', function() {
+  return del('src/**/*.map');
 });
 
 // TypeScript compile / transpile

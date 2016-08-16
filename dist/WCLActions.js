@@ -42,11 +42,30 @@ class WCLActions {
     getZones(bot, message) {
         let uri = `http://www.warcraftlogs.com/v1/zones?api_key=${process.env.WCL_PUBLIC_KEY}`;
         console.log(uri);
+        var messageArray = message.content.split(' ');
         request({ method: 'GET', uri: uri, json: true }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 let zones = response.body;
-                console.log(`zones: ${prettyjson.render(zones)}`);
-                bot.reply(message, `\`\`\`${prettyjson.render(zones)}\`\`\`\n`);
+                if (messageArray.length === 2) {
+                    let zoneToSearchFor = messageArray[1].toLocaleUpperCase();
+                    let isFound = false;
+                    zones.every((value, index, array) => {
+                        if (value.name.toLocaleUpperCase() === zoneToSearchFor || value.name.toLocaleUpperCase().indexOf(zoneToSearchFor) > -1) {
+                            console.log(`Found zone user selected`);
+                            bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(value)}\`\`\`\n`);
+                            isFound = true;
+                            return false;
+                        }
+                        return true;
+                    });
+                    if (!isFound) {
+                        bot.sendMessage(message.channel, `Could not find zone with name '${zoneToSearchFor}'`);
+                    }
+                }
+                else {
+                    // all zones
+                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones.map(a => { return `${a.id} :: ${a.name}`; }))}\`\`\`\n`);
+                }
             }
             else {
                 bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);

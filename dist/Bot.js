@@ -16,7 +16,6 @@ class DiscordBot {
         };
         this.isSupportedAction = (message) => {
             let isSupported = this.supportedActions.hasOwnProperty(message);
-            console.log(`isSupported: ${isSupported}`);
             return isSupported;
         };
         //TODO: DI these later?

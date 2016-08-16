@@ -70,47 +70,35 @@ export default class WCLActions {
     }
 
     public getZones(bot: any, message: any) {
-        //console.log(message);
-        //TODO: Refactor...
         let uri = `http://www.warcraftlogs.com/v1/zones?api_key=${process.env.WCL_PUBLIC_KEY}`;
         console.log(uri);
         var messageArray : string[] = message.content.split(' ');
-        if(messageArray.length === 1) {
-            request({ method : 'GET', uri: uri, json: true}, (error, response, body) => {
-                if(!error && response.statusCode == 200) {
-                    let zones : Zone[] = response.body;
-                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones.map( a => {return `${a.id} :: ${a.name}`;}))}\`\`\`\n`);
-                } else {
-                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
-                }
-            });
-        } else if(messageArray.length == 2) {
-            request({ method : 'GET', uri: uri, json: true}, (error, response, body) => {
-                let isFound = false;
-                if(!error && response.statusCode == 200) {
-                    let zones : Zone[] = response.body;
+        request({ method : 'GET', uri: uri, json: true}, (error, response, body) => {
+            if(!error && response.statusCode == 200) {
+                let zones : Zone[] = response.body;
+                if(messageArray.length === 2) {
                     let zoneToSearchFor = messageArray[1].toLocaleUpperCase();
-                   zones.every( (value,index,array) => {
-                       if(value.name.toLocaleUpperCase() === zoneToSearchFor || value.name.toLocaleUpperCase().indexOf(zoneToSearchFor) > -1) {
-                            console.log(`Found zone user selected: ${prettyjson.render(zones[index])}`);
-                            bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones[index])}\`\`\`\n`);
+                    let isFound = false;
+                    zones.every( (value,index,array) => {
+                        if(value.name.toLocaleUpperCase() === zoneToSearchFor || value.name.toLocaleUpperCase().indexOf(zoneToSearchFor) > -1) {
+                            console.log(`Found zone user selected`);
+                            bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(value)}\`\`\`\n`);
                             isFound = true;
                             return false;
-                       }
-                       return true;
-                   });
-                   if(!isFound){
-                       bot.sendMessage(message.channel, `Could not find zone with name '${zoneToSearchFor}'`);
-                   } 
+                        }
+                        return true;
+                    });
+                    if(!isFound){
+                        bot.sendMessage(message.channel, `Could not find zone with name '${zoneToSearchFor}'`);
+                    }
                 } else {
-                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
+                    // all zones
+                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones.map( a => {return `${a.id} :: ${a.name}`;}))}\`\`\`\n`);
                 }
-            });
-        } else {
-            if(messageArray.length !== 2) {
-                bot.reply(message, "Need to enter ```!zones *zone_name*```");
+            } else {
+                bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
             }
-        }
+        });
     }
 
     public getCharacterRankings(bot: any, message: any, characterName : string, serverName : string, serverRegion: string) {
