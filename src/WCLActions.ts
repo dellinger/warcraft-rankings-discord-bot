@@ -69,10 +69,10 @@ interface CharacterParseGear {
     id: number;
 }
 
-class Difficulty {
-    static MYTHIC = 5;
-    static HEROIC = 4;
-    static NORMAL = 3;
+let dificultyMap = {
+    5: "MYTHIC",
+    4: "HEROIC",
+    3: "NORMAL"
 }
 
 export default class WCLActions {
@@ -93,22 +93,18 @@ export default class WCLActions {
             request(uri, (error, response, body) => {
                 if(!error && response.statusCode == 200) {
                     let test = JSON.parse(response.body);
-                    let characterParse : CharacterParse[] = JSON.parse(response.body);
+                    let characterParse : CharacterParse[] =! JSON.parse(response.body);
                     let botReply = "";
                     //TODO: Working on this to get this narrowed down...for boss...may need to add it to query param
                     characterParse.forEach( (parse, index, array) => {
                         if(parse.name.toLocaleUpperCase().indexOf(boss.toLocaleUpperCase()) > -1) {
-                            botReply = "";
-                            botReply += `--- ${parse.name} ---\n`;
+                            botReply += `--- ${dificultyMap[parse.difficulty]} ${parse.name} ---\n`;
                             parse.specs.forEach( (spec, index, array) => {
-                                botReply += `- Best ${spec.spec} DPS: ${spec.best_persecondamount}-\n`;
+                                botReply += `\tBest ${spec.spec} DPS: ${spec.best_persecondamount}-\n`;
                             });
-                            bot.reply(message, botReply);
-                        } else {
-                            bot.reply(message, `Couldn't find parse`);
                         }
-
                     });
+                    bot.reply(message, botReply);
 
                 } else {
                     bot.reply(message, body);

@@ -1,11 +1,11 @@
 "use strict";
 var request = require('request');
 var prettyjson = require("prettyjson");
-class Difficulty {
-}
-Difficulty.MYTHIC = 5;
-Difficulty.HEROIC = 4;
-Difficulty.NORMAL = 3;
+let dificultyMap = {
+    5: "MYTHIC",
+    4: "HEROIC",
+    3: "NORMAL"
+};
 class WCLActions {
     retrieveParse(bot, message, characterName, serverName, serverRegion) {
         console.log(message);
@@ -24,22 +24,18 @@ class WCLActions {
             request(uri, (error, response, body) => {
                 if (!error && response.statusCode == 200) {
                     let test = JSON.parse(response.body);
-                    let characterParse = JSON.parse(response.body);
+                    let characterParse = !JSON.parse(response.body);
                     let botReply = "";
                     //TODO: Working on this to get this narrowed down...for boss...may need to add it to query param
                     characterParse.forEach((parse, index, array) => {
                         if (parse.name.toLocaleUpperCase().indexOf(boss.toLocaleUpperCase()) > -1) {
-                            botReply = "";
-                            botReply += `--- ${parse.name} ---\n`;
+                            botReply += `--- ${dificultyMap[parse.difficulty]} ${parse.name} ---\n`;
                             parse.specs.forEach((spec, index, array) => {
-                                botReply += `- Best ${spec.spec} DPS: ${spec.best_persecondamount}-\n`;
+                                botReply += `\tBest ${spec.spec} DPS: ${spec.best_persecondamount}-\n`;
                             });
-                            bot.reply(message, botReply);
-                        }
-                        else {
-                            bot.reply(message, `Couldn't find parse`);
                         }
                     });
+                    bot.reply(message, botReply);
                 }
                 else {
                     bot.reply(message, body);
