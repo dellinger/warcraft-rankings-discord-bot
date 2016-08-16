@@ -1,23 +1,45 @@
 "use strict";
 var request = require('request');
 var prettyjson = require("prettyjson");
+class Difficulty {
+}
+Difficulty.MYTHIC = 5;
+Difficulty.HEROIC = 4;
+Difficulty.NORMAL = 3;
 class WCLActions {
     retrieveParse(bot, message, characterName, serverName, serverRegion) {
         console.log(message);
         var messageArray = message.content.split(' ');
-        if (messageArray.length !== 4) {
-            bot.reply(message, "Need to enter ```!parse *CHARACTER_NAME* *SERVER_NAME* *REGION*```");
+        if (messageArray.length !== 5) {
+            bot.reply(message, "Need to enter ```!parse *CHARACTER_NAME* *SERVER_NAME* *REGION* *BOSS*```");
         }
         else {
             var characterName = messageArray[1];
             var serverName = messageArray[2];
             var serverRegion = messageArray[3];
+            let boss = messageArray[4];
             let that = this;
-            let uri = `https://www.warcraftlogs.com:443/v1/parses/character/${characterName}/${serverName}/${serverRegion}?api_key=${process.env.WCL_PUBLIC_KEY}`;
+            let uri = `https://www.warcraftlogs.com:443/v1/parses/character/${characterName}/${serverName}/${serverRegion}?api_key=${process.env.WCL_PUBLIC_KEY}&metric=dps&compare=1`;
             console.log(uri);
             request(uri, (error, response, body) => {
                 if (!error && response.statusCode == 200) {
-                    bot.reply(message, response);
+                    let test = JSON.parse(response.body);
+                    let characterParse = JSON.parse(response.body);
+                    let botReply = "";
+                    //TODO: Working on this to get this narrowed down...for boss...may need to add it to query param
+                    characterParse.forEach((parse, index, array) => {
+                        if (parse.name.toLocaleUpperCase().indexOf(boss.toLocaleUpperCase()) > -1) {
+                            botReply = "";
+                            botReply += `--- ${parse.name} ---\n`;
+                            parse.specs.forEach((spec, index, array) => {
+                                botReply += `- Best ${spec.spec} DPS: ${spec.best_persecondamount}-\n`;
+                            });
+                            bot.reply(message, botReply);
+                        }
+                        else {
+                            bot.reply(message, `Couldn't find parse`);
+                        }
+                    });
                 }
                 else {
                     bot.reply(message, body);
@@ -89,5 +111,3 @@ class WCLActions {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = WCLActions;
-
-//# sourceMappingURL=WCLActions.js.map

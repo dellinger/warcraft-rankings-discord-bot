@@ -30,24 +30,86 @@ interface PlayerClass {
     specs: Specialization[]
 }
 
+interface CharacterParse {
+    difficulty : number;
+    size : number;
+    kill: number;
+    name: string;
+    specs: CharacterParseSpec[];
+    variable : boolean;
+}
+
+interface CharacterParseSpec {
+    class : string;
+    spec: string;
+    combined: boolean;
+    best_persecondamount: number;
+    best_duration: number;
+    best_historical_percent: number;
+    best_allstar_points: number;
+    best_combined_allstar_points: number;
+    possible_allstar_points: number;
+    best_spec: string;
+    best_spec_performance: string;
+    historical_total: number;
+    historical_median: number;
+    historical_avg: number;
+    best_talents: CharacterParseTalents[];
+    best_gear: CharacterParseGear[];
+}
+
+interface CharacterParseTalents {
+    name: string;
+    id: number;
+}
+
+interface CharacterParseGear {
+    name: string;
+    quality: string;
+    id: number;
+}
+
+class Difficulty {
+    static MYTHIC = 5;
+    static HEROIC = 4;
+    static NORMAL = 3;
+}
 
 export default class WCLActions {
 
     retrieveParse(bot: any, message: any, characterName :string, serverName: string, serverRegion : string) {
         console.log(message);
         var messageArray : string[] = message.content.split(' ');
-        if(messageArray.length !== 4) {
-            bot.reply(message, "Need to enter ```!parse *CHARACTER_NAME* *SERVER_NAME* *REGION*```");
+        if(messageArray.length !== 5) {
+            bot.reply(message, "Need to enter ```!parse *CHARACTER_NAME* *SERVER_NAME* *REGION* *BOSS*```");
         } else {
             var characterName = messageArray[1];
             var serverName = messageArray[2];
             var serverRegion = messageArray[3];
+            let boss = messageArray[4];
             let that = this;
-            let uri = `https://www.warcraftlogs.com:443/v1/parses/character/${characterName}/${serverName}/${serverRegion}?api_key=${process.env.WCL_PUBLIC_KEY}`;
+            let uri = `https://www.warcraftlogs.com:443/v1/parses/character/${characterName}/${serverName}/${serverRegion}?api_key=${process.env.WCL_PUBLIC_KEY}&metric=dps&compare=1`;
             console.log(uri);
             request(uri, (error, response, body) => {
                 if(!error && response.statusCode == 200) {
-                    bot.reply(message, response);
+                    let test = JSON.parse(response.body);
+                    let characterParse : CharacterParse[] = JSON.parse(response.body);
+                    let botReply = "";
+                    //TODO: Working on this to get this narrowed down...for boss...may need to add it to query param
+                    characterParse.forEach( (parse, index, array) => {
+                        if(parse.name.toLocaleUpperCase().indexOf(boss.toLocaleUpperCase()) > -1) {
+                            botReply = "";
+                            botReply += `--- ${parse.name} ---\n`;
+                            parse.specs.forEach( (spec, index, array) => {
+                                botReply += `- Best ${spec.spec} DPS: ${spec.best_persecondamount}-\n`;
+                            });
+                            bot.reply(message, botReply);
+                        } else {
+                            bot.reply(message, `Couldn't find parse`);
+                        }
+
+                    });
+
                 } else {
                     bot.reply(message, body);
                 }

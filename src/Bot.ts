@@ -36,17 +36,18 @@ export class DiscordBot {
         });
 
         this.bot.on("message", message => {
-            console.log(`Message: ${message.cleanContent}`);
-            let messageArray = message.cleanContent.split(" ");
-            let potentialAction = messageArray[0];
-            let splicedMessageArray = messageArray.splice(1, messageArray.length);
-            console.log(`splicedMessageArray: ${splicedMessageArray}`);
-            console.log(`Potential Action: ${potentialAction}`);
-            if(that.isSupportedAction(potentialAction)) {
-                console.log(`'${potentialAction}' is supported!`);
-                let action = that.supportedActions[potentialAction];
-                action(that.bot,message,...splicedMessageArray);
+            if(!message.author.bot) {
+                let messageArray = message.cleanContent.split(" ");
+                let potentialAction = messageArray[0];
+                let splicedMessageArray = messageArray.splice(1, messageArray.length);
+                console.log(`Potential Action: ${potentialAction}`);
+                if(that.isSupportedAction(potentialAction)) {
+                    console.log(`'${potentialAction}' is supported!`);
+                    let action = that.supportedActions[potentialAction];
+                    action(that.bot,message,...splicedMessageArray);
+                }
             }
+
         });
     }
 
