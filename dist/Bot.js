@@ -2,7 +2,6 @@
 "use strict";
 const Discord = require("discord.js");
 const BasicActions_1 = require("./BasicActions");
-const WCLActions_1 = require("./WCLActions");
 class DiscordBot {
     constructor() {
         this.supportedActions = {};
@@ -21,14 +20,10 @@ class DiscordBot {
         //TODO: DI these later?
         this.bot = new Discord.Client();
         var basicActions = new BasicActions_1.default();
-        var wclActions = new WCLActions_1.default();
+        var wclActions = new WCLActions();
         this.initialize();
         this.supportedActions['!ping'] = basicActions.pong;
         this.supportedActions["!help"] = this.listCommands;
-        this.supportedActions["!parse"] = wclActions.retrieveParse;
-        this.supportedActions["!classes"] = wclActions.getClasses;
-        this.supportedActions["!zones"] = wclActions.getZones;
-        this.supportedActions["!rank"] = wclActions.getCharacterRankings;
     }
     //TODO: Make this a promise?
     initialize() {

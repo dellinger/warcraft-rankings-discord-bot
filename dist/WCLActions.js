@@ -90,6 +90,26 @@ class WCLActions {
             }
         });
     }
+    //TODO: Left off here, need to just query zones and list out the bosses for each -- so it is easy to get the id. Just doing some copy-pasta from the function above.
+    getEncounters(bot, message) {
+        let uri = `http://www.warcraftlogs.com/v1/zones?api_key=${process.env.WCL_PUBLIC_KEY}`;
+        console.log(uri);
+        if (messageArray.length !== 2) {
+            var messageArray = message.content.split(' ');
+            bot.reply(message, "Need to enter ```!boss *zone_name*```");
+        }
+        else {
+            request({ method: 'GET', uri: uri, json: true }, (error, response, body) => {
+                if (!error && response.statusCode == 200) {
+                    let zones = response.body;
+                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(zones.map(a => { return `${a.id} :: ${a.name}`; }))}\`\`\`\n`);
+                }
+                else {
+                    bot.sendMessage(message.channel, `\`\`\`${prettyjson.render(body)}\`\`\`\n`);
+                }
+            });
+        }
+    }
     getCharacterRankings(bot, message, characterName, serverName, serverRegion) {
         let uri = `http://www.warcraftlogs.com/v1/rankings/character${characterName}/${serverName}/${serverRegion}?api_key=${process.env.WCL_PUBLIC_KEY}`;
         console.log(uri);
